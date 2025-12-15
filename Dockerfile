@@ -1,17 +1,29 @@
-FROM postgrest/postgrest:v12.2.3
+FROM ubuntu:22.04
 
-# Install curl for health checks (base image already runs as root during build)
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     curl \
+    wget \
+    ca-certificates \
     postgresql-client \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# Install PostgREST
+RUN wget -O /tmp/postgrest.tar.xz \
+    https://github.com/PostgREST/postgrest/releases/download/v12.2.3/postgrest-v12.2.3-linux-static-x64.tar.xz \
+    && tar -xJf /tmp/postgrest.tar.xz -C /usr/local/bin/ \
+    && rm /tmp/postgrest.tar.xz \
+    && chmod +x /usr/local/bin/postgrest
 
 # Create app directory for config files
 WORKDIR /app
 
 # Copy configuration files
 COPY config/ /app/config/
-COPY config/postgrest.conf /config/postgrest.conf
+RUN mkdir -p /config && cp /app/config/postgrest.conf /config/postgrest.conf
 
 # Create a startup script
 COPY start.sh /start.sh
