@@ -19,8 +19,8 @@ jobs:
     instance_size_slug: apps-s-1vcpu-512mb
 
     github:
-      repo: AppPlatform-Templates/postgrest-appplatform
-      branch: main
+      repo: venkatranabothu/postgrest-appplatform
+      branch: master
       deploy_on_push: true
 
     dockerfile_path: Dockerfile
@@ -45,8 +45,8 @@ services:
   - name: postgrest-service
     # Build from source (Dockerfile in repository root)
     github:
-      repo: AppPlatform-Templates/postgrest-appplatform
-      branch: main
+      repo: venkatranabothu/postgrest-appplatform
+      branch: master
       deploy_on_push: true
 
     # Container configuration

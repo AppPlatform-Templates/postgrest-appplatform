@@ -4,7 +4,7 @@ A production-ready template for deploying [PostgREST](https://postgrest.org) on 
 
 **✨ Zero-configuration deployment** - Database automatically initialized with working API endpoints!
 
-[![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/AppPlatform-Templates/postgrest-appplatform/tree/main)
+[![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/venkatranabothu/postgrest-appplatform/tree/master)
 
 ## What is PostgREST?
 
@@ -83,7 +83,7 @@ Click the "Deploy to DigitalOcean" button above to deploy instantly with zero co
 
 ```bash
 # Clone the repository
-git clone https://github.com/AppPlatform-Templates/postgrest-appplatform.git
+git clone https://github.com/venkatranabothu/postgrest-appplatform.git
 cd postgrest-appplatform
 
 # Deploy to App Platform
@@ -210,6 +210,6 @@ After deployment, you'll have a `/products` endpoint automatically!
 
 ## Getting Help
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/AppPlatform-Templates/postgrest-appplatform/issues)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/venkatranabothu/postgrest-appplatform/issues)
 - **DigitalOcean Community**: [community.digitalocean.com](https://www.digitalocean.com/community)
 - **Support**: [DigitalOcean Support](https://www.digitalocean.com/support/)
