@@ -10,7 +10,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./config/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./config/init.sql:/init.sql
+    command: >
+      bash -c "docker-entrypoint.sh postgres &
+      until pg_isready -U postgres; do sleep 1; done;
+      psql -U postgres -tAc \"SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'todos');\" | grep -q t || psql -U postgres -f /init.sql;
+      wait"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
