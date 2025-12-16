@@ -25,10 +25,10 @@ PostgREST is a standalone web server that transforms your PostgreSQL database di
 3. **Sample Schema** - Example `public.todos` table and `public.todos_stats` view
 
 **Endpoints**:
-- API root at `/` - OpenAPI documentation
-- RESTful endpoints automatically generated from your database schema
-- Example: `/todos` - CRUD operations on the todos table
-- Example: `/todos_stats` - Read-only view of todo statistics
+- `/welcome` - Simple API usage guide with curl examples (⭐ **Start here!**)
+- `/todos` - CRUD operations on the todos table
+- `/todos_stats` - Read-only view of todo statistics
+- `/` - Full OpenAPI documentation (advanced users)
 
 ## Architecture
 

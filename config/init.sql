@@ -41,11 +41,38 @@ CREATE OR REPLACE VIEW public.todos_stats AS
     COUNT(*) FILTER (WHERE NOT completed) as pending_count
   FROM public.todos;
 
+-- Create a welcome view with API usage examples (accessible at /welcome)
+CREATE OR REPLACE VIEW public.welcome AS
+  SELECT
+    'Welcome to PostgREST API'::text as message,
+    'PostgREST 12.2.3'::text as version,
+    json_build_object(
+      'todos', '/todos',
+      'stats', '/todos_stats',
+      'welcome', '/welcome',
+      'openapi', '/'
+    ) as endpoints,
+    json_build_object(
+      'list_all', 'curl https://your-app.ondigitalocean.app/todos',
+      'get_stats', 'curl https://your-app.ondigitalocean.app/todos_stats',
+      'create', 'curl -X POST https://your-app.ondigitalocean.app/todos -H "Content-Type: application/json" -d ''{"title":"New task","completed":false}''',
+      'update', 'curl -X PATCH https://your-app.ondigitalocean.app/todos?id=eq.1 -H "Content-Type: application/json" -d ''{"completed":true}''',
+      'delete', 'curl -X DELETE https://your-app.ondigitalocean.app/todos?id=eq.1',
+      'filter', 'curl https://your-app.ondigitalocean.app/todos?completed=eq.false',
+      'sort_limit', 'curl https://your-app.ondigitalocean.app/todos?order=id.desc&limit=5'
+    ) as examples,
+    'https://postgrest.org'::text as docs;
+
 -- Log completion
 DO $$
 BEGIN
   RAISE NOTICE 'PostgREST database initialized successfully!';
   RAISE NOTICE 'Sample table: public.todos';
-  RAISE NOTICE 'Sample view: public.todos_stats';
-  RAISE NOTICE 'Test your API at: /todos and /todos_stats';
+  RAISE NOTICE 'Sample views: public.todos_stats, public.welcome';
+  RAISE NOTICE '';
+  RAISE NOTICE 'Available endpoints:';
+  RAISE NOTICE '  GET /welcome - API usage guide with curl examples ⭐';
+  RAISE NOTICE '  GET /todos - List all todos';
+  RAISE NOTICE '  GET /todos_stats - View statistics';
+  RAISE NOTICE '  GET / - Full OpenAPI documentation';
 END $$;
