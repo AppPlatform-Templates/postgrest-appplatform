@@ -30,7 +30,7 @@ cd postgrest-appplatform
 doctl apps create --spec .do/app.yaml
 ```
 
-**Production** (uses your existing database):
+**Production** (uses your existing database with autoscaling):
 ```bash
 # 1. Create a PostgreSQL database
 doctl databases create postgrest-db --engine pg --version 16 --region nyc3 --size db-s-1vcpu-1gb
@@ -40,6 +40,8 @@ doctl apps create --spec .do/production-app.yaml
 ```
 
 Your API will be immediately functional with example endpoints at `/welcome`, `/todos`, and `/todos_stats`.
+
+**Production features**: Autoscaling (1-3 instances), dedicated `api` schema, `anon` role for security.
 
 ## Local Development
 

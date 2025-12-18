@@ -57,8 +57,16 @@ services:
   # Container configuration
   dockerfile_path: Dockerfile
   http_port: 3000
-  instance_count: 1
-  instance_size_slug: apps-s-1vcpu-1gb
+  # instance_count: 1 # Not needed if autoscaling is enabled
+  instance_size_slug: apps-d-1vcpu-1gb
+
+  # Autoscaling configuration
+  autoscaling:
+    min_instance_count: 1
+    max_instance_count: 3
+    metrics:
+      cpu:
+        percent: 80
 
   # Health check configuration
   health_check:
