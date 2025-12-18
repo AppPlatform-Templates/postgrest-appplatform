@@ -129,9 +129,29 @@ On deployment, the database is **automatically initialized** with:
 - ✅ Sample `todos_stats` view for aggregated statistics
 - ✅ All necessary permissions configured automatically
 
-This happens via a **PRE_DEPLOY job** that runs `config/init.sql` or `config/init.production.sql` before the PostgREST service starts.
+This happens via a **PRE_DEPLOY job** (`db-init`) that runs `config/init.sql` or `config/init.production.sql` before the PostgREST service starts.
 
 **Note on Schema and Roles**: App Platform dev databases (`production: false`) use the `public` schema and default database user. This template is optimized for these constraints. For production deployments with custom schemas and roles, consider using a full managed PostgreSQL database.
+
+### Using Your Own Database in Production
+
+**The `db-init` job is optional** - it's primarily for demo purposes to showcase PostgREST functionality. If you have your own production database with existing schema:
+
+1. **Remove the db-init job** from `.do/app.yaml` or `.do/production-app.yaml`:
+   ```yaml
+   # Remove or comment out the entire jobs section
+   # jobs:
+   #   - name: db-init
+   #     ...
+   ```
+
+2. **Point to your existing database** by updating the database reference in the service environment variables
+
+3. **Ensure your database has**:
+   - A schema exposed via PostgREST (set in `PGRST_DB_SCHEMAS`)
+   - Appropriate role permissions (set in `PGRST_DB_ANON_ROLE`)
+
+4. **Deploy** - PostgREST will automatically generate API endpoints from your existing schema
 
 ### Why Sample Data?
 
