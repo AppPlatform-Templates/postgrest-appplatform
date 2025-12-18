@@ -1,82 +1,45 @@
 # Local Development Guide
 
-This guide covers setting up and running the PostgREST template locally for development and testing.
-
-## Prerequisites
-
-- Docker and Docker Compose installed
-- Basic understanding of PostgreSQL and REST APIs
-- (Optional) curl or Postman for testing API endpoints
+Run PostgREST locally for development and testing.
 
 ## Quick Start
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/AppPlatform-Templates/postgrest-appplatform.git
-   cd postgrest-appplatform
-   ```
-
-2. **Start the services**:
-   ```bash
-   docker-compose up
-   ```
-
-3. **Access the API**:
-   - API: http://127.0.0.1:3000
-   - PostgreSQL: 127.0.0.1:5432
-
-## Docker Compose Services
-
-The `docker-compose.yml` defines two services:
-
-### PostgreSQL Database
-- **Image**: postgres:16-alpine
-- **Port**: 5432
-- **Credentials**:
-  - Database: `postgres`
-  - User: `postgres`
-  - Password: `postgres`
-- **Initialization**: Runs `config/init.sql` on first startup
-
-### PostgREST Server
-- **Port**: 3000
-- **Configuration**: Environment variables in docker-compose.yml
-- **Health Check**: Validates server is responding
-
-## Testing the API
-
-### View OpenAPI Documentation
-
 ```bash
-curl http://127.0.0.1:3000/
+git clone https://github.com/AppPlatform-Templates/postgrest-appplatform.git
+cd postgrest-appplatform
+docker-compose up
 ```
 
-This returns the auto-generated OpenAPI schema for your API.
+**Access**:
+- API: http://127.0.0.1:3000
+- PostgreSQL: 127.0.0.1:5432 (user: `postgres`, password: `postgres`)
 
-### CRUD Operations
+The database initializes automatically using `config/init.sql` with sample `todos` data.
+
+## API Examples
+
+**View API guide**:
+```bash
+curl http://127.0.0.1:3000/welcome
+```
 
 **List all todos**:
 ```bash
 curl http://127.0.0.1:3000/todos
 ```
 
-**Get a specific todo**:
-```bash
-curl "http://127.0.0.1:3000/todos?id=eq.1"
-```
-
 **Create a todo**:
 ```bash
 curl -X POST http://127.0.0.1:3000/todos \
   -H "Content-Type: application/json" \
-  -d '{"title": "My new task", "completed": false}'
+  -d '{"title":"New task","completed":false}'
 ```
 
 **Update a todo**:
 ```bash
 curl -X PATCH "http://127.0.0.1:3000/todos?id=eq.1" \
   -H "Content-Type: application/json" \
-  -d '{"completed": true}'
+  -d '{"completed":true}'
 ```
 
 **Delete a todo**:
@@ -89,47 +52,38 @@ curl -X DELETE "http://127.0.0.1:3000/todos?id=eq.1"
 curl http://127.0.0.1:3000/todos_stats
 ```
 
-## Connecting to PostgreSQL
+**OpenAPI docs**: http://127.0.0.1:3000/
 
-You can connect directly to PostgreSQL for database management:
+## Database Access
 
 ```bash
-# Using psql
+# Connect via Docker
 docker exec -it postgrest-db psql -U postgres
 
-# Or from host machine (requires psql installed)
+# Or from host (requires psql)
 psql -h 127.0.0.1 -U postgres -d postgres
 ```
 
 ## Development Workflow
 
-### Modifying the Database Schema
+**Modify database schema**:
+1. Edit `config/init.sql`
+2. Rebuild: `docker-compose down -v && docker-compose up`
 
-1. Edit `config/init.sql` to add/modify tables, views, or functions
-2. Rebuild the database:
-   ```bash
-   docker-compose down -v
-   docker-compose up
-   ```
-3. Test your changes via the API
+**Modify PostgREST config**:
+1. Edit `config/postgrest.conf` or `docker-compose.yml`
+2. Restart: `docker-compose restart postgrest`
 
-### Modifying PostgREST Configuration
+## Advanced
 
-1. Edit `config/postgrest.conf` or environment variables in `docker-compose.yml`
-2. Restart PostgREST:
-   ```bash
-   docker-compose restart postgrest
-   ```
-
-## Advanced Configuration
-
-### Enabling Multiple Schemas
-
-To expose multiple schemas:
-
+**Expose multiple schemas**:
 ```yaml
+# docker-compose.yml
 environment:
   - PGRST_DB_SCHEMAS=api,admin,public
 ```
+Access at: `/api/*`, `/admin/*`, `/public/*`
 
-Schemas are exposed at their respective paths: `/api/*`, `/admin/*`, `/public/*`
+**Enable JWT auth**: See [PostgREST Authentication](https://postgrest.org/en/stable/tutorials/tut1.html)
+
+**Row-level security**: See [PostgreSQL RLS](https://www.postgresql.org/docs/current/ddl-rowsecurity.html)
